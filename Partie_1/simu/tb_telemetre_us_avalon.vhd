@@ -6,8 +6,7 @@ entity tb_telemetre_us_avalon is
 end entity;
 
 architecture Behavioral of tb_telemetre_us_avalon is
-    constant Pulse : time := 10 us; 
-
+    constant Pulse    : time := 10 us; 
     signal Clk        : std_logic := '0';
     signal Rst_n      : std_logic := '0';
     signal trig       : std_logic;
@@ -19,20 +18,10 @@ architecture Behavioral of tb_telemetre_us_avalon is
     signal OK         : boolean := TRUE; 
 
 begin
-    -- Instanciation du module `Telemetre_us_Avalon`
-    DUT: entity work.Telemetre_us_Avalon
-        port map (
-            clk        => Clk,
-            rst_n      => Rst_n,
-            echo       => echo,
-            trig       => trig,
-            Read_n     => Read_n,
-            chipselect => chipselect,
-            readdata   => readdata,
-            Dist_cm    => dist_cm
-        );
+    Inst_Telemetre_us_Avalon: entity work.Telemetre_us_Avalon
+        port map (clk => Clk, rst_n => Rst_n, echo => echo, trig => trig, Read_n => Read_n, 
+        chipselect => chipselect, readdata => readdata, Dist_cm => dist_cm);
 
-    -- Génération de l'horloge
     Clk_process : process
     begin
         Clk <= '0';
@@ -41,82 +30,81 @@ begin
         wait for 10 ns;
     end process;
 
-    -- Banc de test principal
     process
-        -- Variables pour mesurer les temps
+        --Variables pour mesurer les temps
         variable t1, t2 : time := 0 ns;
     begin
         report "Debut de la simulation";
-
-        -- Reset du système
         Rst_n <= '0';
         wait for 100 ns;
-        Rst_n <= '1'; -- Relâcher le reset
+        Rst_n <= '1'; 
         wait for 100 ns;
-
-        report "Test : Verification de Trig et Echo pour 1 ms";
-
+        
         wait until trig = '1';
         t1 := now;
         wait until trig = '0';
         t2 := now;
 
-        -- Vérification de la durée de Trig
-        report "Duree mesuree pour Trig : " & time'image(t2 - t1);
-        assert (t2 - t1) = Pulse
-            report "Erreur : Duree de l'impulsion Trig incorrecte !" severity failure;
-
-        -- Simuler un écho pour une distance de 5 cm
-        wait for 100 ns; -- Pause avant Echo
-        echo <= '1'; -- Activer Echo
-        wait for 340 us; -- Durée de l'écho
-        echo <= '0'; -- Désactiver Echo
-        -- Vérification de la distance calculée
-        wait for 20 ms;
-
-        chipselect <= '1'; -- Activer le périphérique
-        Read_n <= '0'; -- Demande de lecture
-        wait for 10 ns;
-        if readdata = std_logic_vector(to_unsigned(5, 32)) then -- 5 cm en entier 32 bits
-            report "Distance correcte pour Echo de 340 us : 5 cm (32 bits)" severity note;
+        --Verification de la duree de Trig
+        if Pulse = (t2 - t1) then
+            report "Duree de l'impulsion Trig correcte !" severity note;
         else
-            report "Erreur : Distance incorrecte pour Echo de 340 us, readdata = " severity error;
+            report "Duree de l'impulsion Trig incorrecte !" severity error;
             OK <= FALSE;
         end if;
 
-        chipselect <= '0'; -- Désactiver le périphérique
-        Read_n <= '1'; -- Relâcher la lecture
+        --Simulation d'un echo de 540 us
+        report "Test : Verification de Trig et Echo pour 540 us";
+        wait for 100 ns; 
+        echo <= '1';
+        wait for 540 us; 
+        echo <= '0'; 
+        wait for 20 ms;
 
-        -- Simuler un écho pour une distance de 10 cm
+        chipselect <= '1'; 
+        Read_n <= '0'; --Demande de lecture
+        wait for 10 ns;
+        if readdata = x"00000009" and dist_cm = "0000001001" then 
+            report "Readdata lit la bonne distance pour un Echo de 540 us" severity note;
+        else
+            report "Readdata lit une mauvaise distance pour un Echo de 540 us" severity error;
+            OK <= FALSE;
+        end if;
+
+        chipselect <= '0'; 
+        Read_n <= '1'; 
+
         wait until trig = '1';
         wait until trig = '0';
 
-        wait for 100 ns; -- Pause avant Echo
-        echo <= '1'; -- Activer Echo
-        wait for 640 us; -- Durée de l'écho
-        echo <= '0'; -- Désactiver Echo
-        -- Vérification de la distance calculée
+        --Simulation d'un echo de 180 us
+        report "Test : Verification de Trig et Echo pour 180 us";
+        wait for 100 ns; 
+        echo <= '1'; 
+        wait for 180 us; 
+        echo <= '0'; 
         wait for 20 ms;
 
-        chipselect <= '1'; -- Activer le périphérique
-        Read_n <= '0'; -- Demande de lecture
+        chipselect <= '1'; 
+        Read_n <= '0'; 
         wait for 10 ns;
-        if readdata = std_logic_vector(to_unsigned(10, 32)) then -- 10 cm en entier 32 bits
-            report "Distance correcte pour Echo de 640 us : 10 cm (32 bits)" severity note;
+        if readdata = x"00000003" and dist_cm = "0000000011" then 
+            report "Readdata lit la bonne distance pour un Echo de 180 us" severity note;
         else
-            report "Erreur : Distance incorrecte pour Echo de 640 us, readdata = " severity error;
+            report "Readdata lit une mauvaise distance pour un Echo de 180 us" severity error;
             OK <= FALSE;
         end if;
 
-        chipselect <= '0'; -- Désactiver le périphérique
-        Read_n <= '1'; -- Relâcher la lecture
+        chipselect <= '0'; 
+        Read_n <= '1'; 
 
         wait for 1 ms;
-        -- Résultat final
-        if OK then
+        if (OK) then
             report "Tous les tests ont ete reussis !" severity note;
+            report "L'interface Avalon pour le telemetre fonctionne bien" severity note;
         else
-            report "Certains tests ont echoue." severity error;
+            report "Tous les tests ont ete reussis !" severity note;
+            report "L'interface Avalon pour le telemetre ne fonctionne pas" severity error;
         end if;
 
         report "Fin de la simulation";

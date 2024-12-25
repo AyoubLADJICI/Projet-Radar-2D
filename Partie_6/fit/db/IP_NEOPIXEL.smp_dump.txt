@@ -1,0 +1,8 @@
+
+State Machine - |ip_neopixel|current_state
+Name current_state.NEXT_LED current_state.NEXT_BIT current_state.SEND_LOW current_state.SEND_HIGH current_state.IDLE 
+current_state.IDLE 0 0 0 0 0 
+current_state.SEND_HIGH 0 0 0 1 1 
+current_state.SEND_LOW 0 0 1 0 1 
+current_state.NEXT_BIT 0 1 0 0 1 
+current_state.NEXT_LED 1 0 0 0 1 

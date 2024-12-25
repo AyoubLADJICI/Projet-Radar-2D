@@ -1,0 +1,9 @@
+02:01:26 **** Incremental Build of configuration Nios II for project NiosII_affichage_obstacle ****
+make all 
+Info: Building ../NiosII_affichage_obstacle_bsp/
+C:/intelFPGA_lite/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../NiosII_affichage_obstacle_bsp/
+[BSP build complete]
+[NiosII_affichage_obstacle build complete]
+
+02:01:27 Build Finished (took 970ms)
+

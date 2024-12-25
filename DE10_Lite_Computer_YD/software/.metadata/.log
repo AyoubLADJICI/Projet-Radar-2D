@@ -1,0 +1,98 @@
+!SESSION 2024-12-24 21:20:13.949 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_05
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=fr_FR
+Framework arguments:  -product org.eclipse.epp.package.cpp.product -pluginCustomization C:/intelfpga_lite/18.1/nios2eds/bin/eclipse_nios2/plugin_customization.ini
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.cpp.product -pluginCustomization C:/intelfpga_lite/18.1/nios2eds/bin/eclipse_nios2/plugin_customization.ini
+
+!ENTRY org.eclipse.epp.logging.aeri.ide 2 16 2024-12-24 21:21:28.731
+!MESSAGE Server ‘org.eclipse.epp.logging.aeri.ide.server’ failed with exception: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1. ; version: 1.100.0.v20160217-0435
+!STACK 0
+com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1
+	at com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$Adapter.read(ReflectiveTypeAdapterFactory.java:176)
+	at com.google.gson.Gson.fromJson(Gson.java:803)
+	at com.google.gson.Gson.fromJson(Gson.java:768)
+	at com.google.gson.Gson.fromJson(Gson.java:717)
+	at org.eclipse.epp.internal.logging.aeri.ide.server.json.Json.deserialize(Json.java:88)
+	at org.eclipse.epp.internal.logging.aeri.ide.server.mars.IO.refreshConfiguration(IO.java:70)
+	at org.eclipse.epp.internal.logging.aeri.ide.server.mars.ServerConnection.startUp(ServerConnection.java:101)
+	at com.google.common.util.concurrent.AbstractIdleService$2$1.run(AbstractIdleService.java:54)
+	at com.google.common.util.concurrent.Callables$3.run(Callables.java:93)
+	at java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1
+	at com.google.gson.stream.JsonReader.beginObject(JsonReader.java:374)
+	at com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$Adapter.read(ReflectiveTypeAdapterFactory.java:165)
+	... 9 more
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-12-24 21:23:16.769
+!MESSAGE Indexed 'NiosII_affichage_obstacle' (1 sources, 0 headers) in 0,47 sec: 9 declarations; 26 references; 4 unresolved inclusions; 0 syntax errors; 4 unresolved names (10 %)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-12-24 21:24:08.198
+!MESSAGE Indexed 'NiosII_affichage_obstacle_bsp' (83 sources, 152 headers) in 5,32 sec: 5 262 declarations; 8 545 references; 4 unresolved inclusions; 2 syntax errors; 11 unresolved names (0,08 %)
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:00:16.482
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --stop --sidp=0xff202040 --id=0x0 --timestamp=1735048047]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:00:19.025
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --go --sidp=0xff202040 --id=0x0 --timestamp=1735048047 /cygdrive/c/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/DE10_Lite_Computer_YD/software/NiosII_affichage_obstacle/NiosII_affichage_obstacle.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:01:36.641
+!MESSAGE Terminated Launch with connection: 10USB-Blaster on localhost [USB-0]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:01:37.560
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --stop --sidp=0xff202040 --id=0x0 --timestamp=1735048047]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:01:39.869
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --go --sidp=0xff202040 --id=0x0 --timestamp=1735048047 /cygdrive/c/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/DE10_Lite_Computer_YD/software/NiosII_affichage_obstacle/NiosII_affichage_obstacle.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:22:16.396
+!MESSAGE Terminated Launch with connection: 10USB-Blaster on localhost [USB-0]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:22:17.209
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --stop --sidp=0xff202040 --id=0x0 --timestamp=1735048047]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:22:19.549
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --go --sidp=0xff202040 --id=0x0 --timestamp=1735048047 /cygdrive/c/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/DE10_Lite_Computer_YD/software/NiosII_affichage_obstacle/NiosII_affichage_obstacle.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:37:30.698
+!MESSAGE Terminated Launch with connection: 10USB-Blaster on localhost [USB-0]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:37:31.542
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --stop --sidp=0xff202040 --id=0x0 --timestamp=1735048047]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:37:33.942
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --go --sidp=0xff202040 --id=0x0 --timestamp=1735048047 /cygdrive/c/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/DE10_Lite_Computer_YD/software/NiosII_affichage_obstacle/NiosII_affichage_obstacle.elf]
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-12-24 23:39:45.363
+!MESSAGE Indexed 'NiosII_Servomoteur' (1 sources, 0 headers) in 0,021 sec: 4 declarations; 10 references; 4 unresolved inclusions; 0 syntax errors; 2 unresolved names (12 %)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-12-24 23:40:24.311
+!MESSAGE Indexed 'NiosII_Servomoteur_bsp' (83 sources, 156 headers) in 3,01 sec: 5 446 declarations; 8 754 references; 9 unresolved inclusions; 2 syntax errors; 36 unresolved names (0,25 %)
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:41:13.812
+!MESSAGE Terminated Launch with connection: 10USB-Blaster on localhost [USB-0]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:41:14.650
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --stop --sidp=0xff202040 --id=0x0 --timestamp=1735048047]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:41:17.132
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --go --sidp=0xff202040 --id=0x0 --timestamp=1735048047 /cygdrive/c/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/DE10_Lite_Computer_YD/software/NiosII_Servomoteur/NiosII_Servomoteur.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:42:02.811
+!MESSAGE Terminated Launch with connection: 10USB-Blaster on localhost [USB-0]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:42:03.580
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --stop --sidp=0xff202040 --id=0x0 --timestamp=1735048047]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-24 23:42:05.909
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --go --sidp=0xff202040 --id=0x0 --timestamp=1735048047 /cygdrive/c/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/DE10_Lite_Computer_YD/software/NiosII_Servomoteur/NiosII_Servomoteur.elf]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-25 02:01:27.758
+!MESSAGE Terminated Launch with connection: 10USB-Blaster on localhost [USB-0]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-25 02:01:28.648
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --stop --sidp=0xff202040 --id=0x0 --timestamp=1735048047]
+
+!ENTRY com.altera.sbtgui.launch 1 0 2024-12-25 02:01:31.117
+!MESSAGE Executing: [C:/intelfpga_lite/18.1/quartus\bin64\cygwin\bin\bash.exe, -c, nios2-download '--cable=USB-Blaster on localhost [USB-0]' --device=1 --instance=0 --go --sidp=0xff202040 --id=0x0 --timestamp=1735048047 /cygdrive/c/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/DE10_Lite_Computer_YD/software/NiosII_affichage_obstacle/NiosII_affichage_obstacle.elf]

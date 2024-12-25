@@ -1,7 +1,0 @@
-
-State Machine - |ip_telemetre|state
-Name state.WAIT100MS state.MEASURE state.TRIGGER state.IDLE 
-state.IDLE 0 0 0 0 
-state.TRIGGER 0 0 1 1 
-state.MEASURE 0 1 0 1 
-state.WAIT100MS 1 0 0 1 

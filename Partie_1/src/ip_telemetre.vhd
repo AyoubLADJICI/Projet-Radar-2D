@@ -13,25 +13,26 @@ entity ip_telemetre is
 end ip_telemetre;
 
 architecture Behavioral of ip_telemetre is
-    --Constantes
-    constant TRIG_DURATION  : integer := 500;       
-    constant TIMEOUT_TICKS  : integer := 1_000_000;    
-    constant WAIT_TICKS     : integer := 5_000_000;    
-    constant DIVISOR        : integer := 3000;        
 
-    --Signaux internes
-    signal count_trig     : unsigned(8 downto 0) := (others => '0');
-    signal cnt_echo_ticks  : integer := 0;
-    signal count_timeout  : unsigned(20 downto 0) := (others => '0');
-    signal count_100ms     : unsigned(22 downto 0) := (others => '0'); 
-    signal distance_cm      : integer := 0;
+--On utilise une frequence d'horloge de 50MHz
+--Alors on a une periode de 20ns 
+--1 tick = 20ns
+constant TRIG_DURATION  : integer := 500; --500 tick = 10us       
+constant TIMEOUT_TICKS  : integer := 1_000_000; --1_000_000 tick = 20ms   
+constant WAIT_TICKS     : integer := 5_000_000; --5_000_000 tick = 100ms   
+constant DIVISEUR        : integer := 3000;        
 
-    type state_type is (IDLE, TRIGGER, MEASURE, WAIT100MS);
-    signal state : state_type := IDLE;
+signal count_trig     : unsigned(8 downto 0) := (others => '0'); --compteur pour la duree de l'impulsion Trig
+signal cnt_echo_ticks  : integer := 0; --compteur pour le nombre de ticks pendant la duree du signal echo a l'etat haut
+signal count_timeout  : unsigned(20 downto 0) := (others => '0'); 
+signal count_100ms     : unsigned(22 downto 0) := (others => '0'); 
+signal distance_cm      : integer := 0;
+
+type state_type is (IDLE, TRIGGER, MEASURE, WAIT100MS);
+signal state : state_type := IDLE;
 
 begin
     Dist_cm <= std_logic_vector(to_unsigned(distance_cm,10));
-
     process(clk, rst_n)
     begin
         if rst_n = '0' then
@@ -68,14 +69,14 @@ begin
                 when MEASURE =>
                     if echo = '1' then
                         cnt_echo_ticks <= cnt_echo_ticks + 1; 
-                    elsif count_timeout < TIMEOUT_TICKS then
+                    elsif count_timeout < TIMEOUT_TICKS then --Si le signal echo reste a l'etat bas pendant plus de 20ms, on sort de l'etat MEASURE
                         count_timeout <= count_timeout + 1; 
                     else
-                        distance_cm <= cnt_echo_ticks / DIVISOR;
+                        distance_cm <= cnt_echo_ticks/DIVISEUR;
                         state <= WAIT100MS; 
                     end if;
 
-                --Attente de 100 ms avant de revenir à IDLE
+                --Attente 100 ms avant de revenir à IDLE
                 when WAIT100MS =>
                     if count_100ms < WAIT_TICKS then
                         count_100ms <= count_100ms + 1;
@@ -89,5 +90,4 @@ begin
             end case;
         end if;
     end process;
-
 end Behavioral;

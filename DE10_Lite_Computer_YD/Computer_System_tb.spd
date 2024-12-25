@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simPackage>
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_Video_PLL.vhd"
+   type="VHDL"
+   library="Video_PLL" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_System_PLL.vhd"
+   type="VHDL"
+   library="System_PLL" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_SysID.v"
+   type="VERILOG"
+   library="SysID" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_Slider_Switches.vhd"
+   type="VHDL"
+   library="Slider_Switches" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_SDRAM.vhd"
+   type="VHDL"
+   library="SDRAM" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_SDRAM_test_component.vhd"
+   type="VHDL"
+   library="SDRAM" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_Pushbuttons.vhd"
+   type="VHDL"
+   library="Pushbuttons" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_Onchip_SRAM.hex"
+   type="HEX"
+   library="Onchip_SRAM" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_Onchip_SRAM.vhd"
+   type="VHDL"
+   library="Onchip_SRAM" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/fpoint_wrapper.v"
+   type="VERILOG"
+   library="Nios2_Floating_Point" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/fpoint_qsys.v"
+   type="VERILOG"
+   library="Nios2_Floating_Point" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/fpoint_hw_qsys.v"
+   type="VERILOG"
+   library="Nios2_Floating_Point" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_Nios2.v"
+   type="VERILOG"
+   library="Nios2" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_LEDs.vhd"
+   type="VHDL"
+   library="LEDs" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_JTAG_to_FPGA_Bridge.vhd"
+   type="VHDL"
+   library="JTAG_to_FPGA_Bridge" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_JTAG_UART.vhd"
+   type="VHDL"
+   library="JTAG_UART" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_Interval_Timer.vhd"
+   type="VHDL"
+   library="Interval_Timer" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_HEX5_HEX4.vhd"
+   type="VHDL"
+   library="HEX5_HEX4" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System_HEX3_HEX0.vhd"
+   type="VHDL"
+   library="HEX3_HEX0" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_sdram_partner_module.vhd"
+   type="VHDL"
+   library="SDRAM_my_partner" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_avalon_reset_source.vhd"
+   type="VHDL"
+   library="Computer_System_inst_system_pll_ref_reset_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_avalon_clock_source.vhd"
+   type="VHDL"
+   library="Computer_System_inst_system_pll_ref_clk_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_0007_vhdl_pkg.vhd"
+   type="VHDL"
+   library="Computer_System_inst_slider_switches_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_0007.vhd"
+   type="VHDL"
+   library="Computer_System_inst_slider_switches_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_0006_vhdl_pkg.vhd"
+   type="VHDL"
+   library="Computer_System_inst_pushbuttons_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_0006.vhd"
+   type="VHDL"
+   library="Computer_System_inst_pushbuttons_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_0005_vhdl_pkg.vhd"
+   type="VHDL"
+   library="Computer_System_inst_leds_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_0005.vhd"
+   type="VHDL"
+   library="Computer_System_inst_leds_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_0004_vhdl_pkg.vhd"
+   type="VHDL"
+   library="Computer_System_inst_hex5_hex4_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_0004.vhd"
+   type="VHDL"
+   library="Computer_System_inst_hex5_hex4_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_0003_vhdl_pkg.vhd"
+   type="VHDL"
+   library="Computer_System_inst_hex3_hex0_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_0003.vhd"
+   type="VHDL"
+   library="Computer_System_inst_hex3_hex0_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_0002_vhdl_pkg.vhd"
+   type="VHDL"
+   library="Computer_System_inst_avalon_telemetre_0_telemetre_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_0002.vhd"
+   type="VHDL"
+   library="Computer_System_inst_avalon_telemetre_0_telemetre_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm_vhdl_pkg.vhd"
+   type="VHDL"
+   library="Computer_System_inst_avalon_servomoteur_0_servomoteur_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/altera_conduit_bfm.vhd"
+   type="VHDL"
+   library="Computer_System_inst_avalon_servomoteur_0_servomoteur_bfm" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/Computer_System.vhd"
+   type="VHDL"
+   library="Computer_System_inst" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/computer_system_rst_controller.vhd"
+   type="VHDL"
+   library="Computer_System_inst" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/submodules/computer_system_rst_controller_001.vhd"
+   type="VHDL"
+   library="Computer_System_inst" />
+ <file
+   path="Computer_System/testbench/Computer_System_tb/simulation/Computer_System_tb.vhd"
+   type="VHDL" />
+ <topLevel name="Computer_System_tb" />
+ <deviceFamily name="max10" />
+ <modelMap
+   controllerPath="Computer_System_tb.Computer_System_inst.Onchip_SRAM"
+   modelPath="Computer_System_tb.Computer_System_inst.Onchip_SRAM" />
+ <modelMap
+   controllerPath="Computer_System_tb.Computer_System_inst.SDRAM"
+   modelPath="Computer_System_tb.SDRAM_my_partner" />
+</simPackage>

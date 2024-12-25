@@ -13,19 +13,26 @@ end ip_servomoteur;
 
 architecture RTL of ip_servomoteur is
 
-signal div         : unsigned(31 downto 0) := to_unsigned(1000000, 32); --Periode de 20 ms
-signal duty        : unsigned(31 downto 0);
-signal counter     : unsigned(31 downto 0);
+constant MIN_PULSE : integer := 50000; --1 ms
+  
+signal div         : unsigned(19 downto 0) := to_unsigned(50E6/50, 20); --20 ms ~ 1 000 000 de ticks (necessite 20 bits pour coder 1000000)
+signal duty        : unsigned(19 downto 0); --Duree de l'impulsion
+signal counter     : unsigned(19 downto 0);
 signal pwm_on      : std_logic := '0';
 
 begin
-
-  process(position)
+  process(clk, reset_n)
   begin
-	 --si position == 0 alors duree d'impulsion d'1 ms (50 000 ticks)
-	 --si position == 128 alors duree d'impulsion d'1.5 ms (75 000 ticks)
-	 --si position == 255 alors duree d'impulsion d'2 ms (100 000 ticks)
-    duty <= to_unsigned(50000 + 50000*(to_integer(unsigned(position)))/255, 32);
+    if reset_n = '0' then
+      duty <= to_unsigned(MIN_PULSE, 20);
+    elsif rising_edge(clk) then
+      --Calcul de la duree de l'impulsion en fonction de la position
+      --si position == 0 alors on a une duree d'impulsion d'1 ms (50 000 ticks) ~ 0°
+	    --si position == 85 alors duree d'impulsion d'1.5 ms (75 000 ticks) ~ 45°
+	    --si position == 170 alors duree d'impulsion d'2 ms (100 000 ticks) ~ 90°
+      --si position == 255 alors duree d'impulsion d'2.5 ms (125 000 ticks) ~ 135°
+      duty <= to_unsigned(MIN_PULSE + 75000*(to_integer(unsigned(position)))/255, 20);
+    end if;
   end process;
 
   process(clk, reset_n)
@@ -53,7 +60,6 @@ begin
       end if;
     end if;
   end process;
-
 
   commande <= pwm_on;
 

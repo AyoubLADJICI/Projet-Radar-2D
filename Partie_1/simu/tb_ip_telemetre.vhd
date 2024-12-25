@@ -6,27 +6,18 @@ entity tb_ip_telemetre is
 end entity;
 
 architecture Behavioral of tb_ip_telemetre is
-    constant Pulse : time := 10 us; 
-
-    signal Clk : std_logic := '0';
-    signal Rst_n : std_logic := '0';
-    signal trig : std_logic;
-    signal echo : std_logic := '0';
-    signal dist_cm : std_logic_vector(9 downto 0);
-    signal OK : boolean := TRUE; 
+constant Pulse : time := 10 us; 
+signal clk : std_logic := '0';
+signal rst_n : std_logic := '0';
+signal trig : std_logic;
+signal echo : std_logic := '0';
+signal dist_cm : std_logic_vector(9 downto 0);
+signal OK : boolean := TRUE; 
 
 begin
-    -- Instanciation du module `telemetre_us`
-    D1: entity work.ip_telemetre
-        port map (
-            clk      => Clk,
-            rst_n    => Rst_n,
-            trig     => trig,
-            echo     => echo,
-            Dist_cm  => dist_cm
-        );
+    Inst_IP_Telemetre: entity work.ip_telemetre
+        port map (clk => clk, rst_n => rst_n, trig => trig, echo => echo, Dist_cm  => dist_cm);
 
-    -- Génération de l'horloge
     Clk_process : process
     begin
         clk <= '0';
@@ -35,68 +26,66 @@ begin
         wait for 10 ns;
     end process;
 
-    -- Banc de test principal
     process
-        -- Variables pour mesurer les temps
+        --Variables pour mesurer les temps
         variable t1, t2 : time := 0 ns;
     begin
-        report "Debut de la simulation";
-
-        -- Reset du système
-        Rst_n <= '0';
+        report "Debut de la simulation"; 
+        rst_n <= '0';
         wait for 100 ns;
-        Rst_n <= '1'; -- Relâcher le reset
+        rst_n <= '1'; 
         wait for 100 ns;
-
-        report "Test : Verification de Trig et Echo pour 1 ms";
 
         wait until trig = '1';
         t1 := now;
         wait until trig = '0';
         t2 := now;
 
-        -- Vérification de la durée de Trig
-        report "Duree mesuree pour Trig : " & time'image(t2 - t1);
-        assert (t2 - t1) = Pulse
-            report "Erreur : Duree de l'impulsion Trig incorrecte !" severity failure;
-
-        -- Simuler un écho de 1 ms
-        wait for 100 ns; -- Pause avant Echo
-        echo <= '1'; -- Activer Echo
-        wait for 340 us; -- Durée de l'écho
-        echo <= '0'; -- Désactiver Echo
-        -- Vérification de la distance calculée
-        wait for 20 ms;
-        if dist_cm = "0000000101" then -- 100 en binaire
-            report "Distance correcte pour Echo de 340 us : 5 cm" severity note;
+        --Verification de la duree de Trig
+        if Pulse = (t2 - t1) then
+            report "Duree de l'impulsion Trig correcte !" severity note;
         else
-            report "Erreur : Distance incorrecte pour Echo de 20 ms" severity error;
+            report "Duree de l'impulsion Trig incorrecte !" severity error;
+            OK <= FALSE;
+        end if;
+
+        --Simulation d'un echo de 540 us
+        report "Test : Verification de Trig et Echo pour 540 us";
+        wait for 100 ns; 
+        echo <= '1';
+        wait for 540 us; 
+        echo <= '0'; 
+        wait for 20 ms;
+        if dist_cm = "0000001001" then --9 en decimal
+            report "Distance correcte pour Echo de 540 us : 9 cm" severity note;
+        else
+            report "Erreur : Distance incorrecte pour Echo de 540 us" severity error;
             OK <= FALSE;
         end if;
 
         wait until trig = '1';
         wait until trig = '0';
 
-        -- Simuler un écho de 1 ms
-        wait for 100 ns; -- Pause avant Echo
-        echo <= '1'; -- Activer Echo
-        wait for 640 us; -- Durée de l'écho
-        echo <= '0'; -- Désactiver Echo
-        -- Vérification de la distance calculée
+        --Simulation d'un echo de 180 us
+        report "Test : Verification de Trig et Echo pour 180 us";
+        wait for 100 ns; 
+        echo <= '1'; 
+        wait for 180 us; 
+        echo <= '0'; 
         wait for 20 ms;
-        if dist_cm = "0000001010" then -- 100 en binaire
-            report "Distance correcte pour Echo de 640 us : 10 cm" severity note;
+        if dist_cm = "0000000011" then --3 en decimal
+            report "Distance correcte pour Echo de 180 us : 3 cm" severity note;
         else
-            report "Erreur : Distance incorrecte pour Echo de 10 ms" severity error;
+            report "Erreur : Distance incorrecte pour Echo de 340 us" severity error;
             OK <= FALSE;
         end if;
-        
-        wait for 1 ms;
-        -- Résultat final
-        if OK then
-            report "Simulation complete : Tous les tests reussis !" severity note;
+
+        --wait for 1 ms;
+
+        if (OK) then
+            report "Tous les tests ont ete reussis !" severity note;
         else
-            report "Simulation complete : Certains tests ont echoue." severity error;
+            report "Certains tests ont echoue." severity error;
         end if;
 
         report "Fin de la simulation";
