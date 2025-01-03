@@ -1,15 +1,15 @@
-Fitter Status : Successful - Mon Dec 16 17:56:45 2024
+Fitter Status : Successful - Fri Jan 03 17:16:58 2025
 Quartus Prime Version : 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 Revision Name : IP_NEOPIXEL
 Top-level Entity Name : ip_neopixel
 Family : MAX 10
 Device : 10M50DAF484C6GES
 Timing Models : Preliminary
-Total logic elements : 111 / 49,760 ( < 1 % )
-    Total combinational functions : 106 / 49,760 ( < 1 % )
-    Dedicated logic registers : 52 / 49,760 ( < 1 % )
-Total registers : 52
-Total pins : 3 / 360 ( < 1 % )
+Total logic elements : 126 / 49,760 ( < 1 % )
+    Total combinational functions : 126 / 49,760 ( < 1 % )
+    Dedicated logic registers : 45 / 49,760 ( < 1 % )
+Total registers : 45
+Total pins : 7 / 360 ( 2 % )
 Total virtual pins : 0
 Total memory bits : 0 / 1,677,312 ( 0 % )
 Embedded Multiplier 9-bit elements : 0 / 288 ( 0 % )

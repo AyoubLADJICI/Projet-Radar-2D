@@ -1,5 +1,5 @@
 Analysis & Synthesis report for IP_NEOPIXEL
-Mon Dec 16 17:56:34 2024
+Fri Jan 03 17:16:47 2025
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
 
 
@@ -13,13 +13,15 @@ Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
   5. Analysis & Synthesis Source Files Read
   6. Analysis & Synthesis Resource Usage Summary
   7. Analysis & Synthesis Resource Utilization by Entity
-  8. Registers Removed During Synthesis
-  9. General Register Statistics
- 10. Inverted Register Statistics
- 11. Multiplexer Restructuring Statistics (Restructuring Performed)
- 12. Post-Synthesis Netlist Statistics for Top Partition
- 13. Elapsed Time Per Partition
- 14. Analysis & Synthesis Messages
+  8. State Machine - |ip_neopixel|state
+  9. Logic Cells Representing Combinational Loops
+ 10. Registers Removed During Synthesis
+ 11. General Register Statistics
+ 12. Inverted Register Statistics
+ 13. Multiplexer Restructuring Statistics (Restructuring Performed)
+ 14. Post-Synthesis Netlist Statistics for Top Partition
+ 15. Elapsed Time Per Partition
+ 16. Analysis & Synthesis Messages
 
 
 
@@ -45,16 +47,16 @@ refer to the applicable agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                     ;
 +------------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Mon Dec 16 17:56:34 2024       ;
+; Analysis & Synthesis Status        ; Successful - Fri Jan 03 17:16:47 2025       ;
 ; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Lite Edition ;
 ; Revision Name                      ; IP_NEOPIXEL                                 ;
 ; Top-level Entity Name              ; ip_neopixel                                 ;
 ; Family                             ; MAX 10                                      ;
-; Total logic elements               ; 105                                         ;
-;     Total combinational functions  ; 105                                         ;
-;     Dedicated logic registers      ; 52                                          ;
-; Total registers                    ; 52                                          ;
-; Total pins                         ; 3                                           ;
+; Total logic elements               ; 125                                         ;
+;     Total combinational functions  ; 124                                         ;
+;     Dedicated logic registers      ; 45                                          ;
+; Total registers                    ; 45                                          ;
+; Total pins                         ; 7                                           ;
 ; Total virtual pins                 ; 0                                           ;
 ; Total memory bits                  ; 0                                           ;
 ; Embedded Multiplier 9-bit elements ; 0                                           ;
@@ -181,30 +183,30 @@ refer to the applicable agreement for further details.
 +---------------------------------------------+-----------+
 ; Resource                                    ; Usage     ;
 +---------------------------------------------+-----------+
-; Estimated Total logic elements              ; 105       ;
+; Estimated Total logic elements              ; 125       ;
 ;                                             ;           ;
-; Total combinational functions               ; 105       ;
+; Total combinational functions               ; 124       ;
 ; Logic element usage by number of LUT inputs ;           ;
-;     -- 4 input functions                    ; 52        ;
-;     -- 3 input functions                    ; 13        ;
-;     -- <=2 input functions                  ; 40        ;
+;     -- 4 input functions                    ; 60        ;
+;     -- 3 input functions                    ; 21        ;
+;     -- <=2 input functions                  ; 43        ;
 ;                                             ;           ;
 ; Logic elements by mode                      ;           ;
-;     -- normal mode                          ; 70        ;
-;     -- arithmetic mode                      ; 35        ;
+;     -- normal mode                          ; 103       ;
+;     -- arithmetic mode                      ; 21        ;
 ;                                             ;           ;
-; Total registers                             ; 52        ;
-;     -- Dedicated logic registers            ; 52        ;
+; Total registers                             ; 45        ;
+;     -- Dedicated logic registers            ; 45        ;
 ;     -- I/O registers                        ; 0         ;
 ;                                             ;           ;
-; I/O pins                                    ; 3         ;
+; I/O pins                                    ; 7         ;
 ;                                             ;           ;
 ; Embedded Multiplier 9-bit elements          ; 0         ;
 ;                                             ;           ;
-; Maximum fan-out node                        ; CLK~input ;
-; Maximum fan-out                             ; 52        ;
-; Total fan-out                               ; 538       ;
-; Average fan-out                             ; 3.30      ;
+; Maximum fan-out node                        ; clk~input ;
+; Maximum fan-out                             ; 45        ;
+; Total fan-out                               ; 572       ;
+; Average fan-out                             ; 3.13      ;
 +---------------------------------------------+-----------+
 
 
@@ -213,21 +215,55 @@ refer to the applicable agreement for further details.
 +----------------------------+---------------------+---------------------------+-------------+------------+--------------+---------+-----------+------+--------------+------------+---------------------+-------------+--------------+
 ; Compilation Hierarchy Node ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; UFM Blocks ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; ADC blocks ; Full Hierarchy Name ; Entity Name ; Library Name ;
 +----------------------------+---------------------+---------------------------+-------------+------------+--------------+---------+-----------+------+--------------+------------+---------------------+-------------+--------------+
-; |ip_neopixel               ; 105 (105)           ; 52 (52)                   ; 0           ; 0          ; 0            ; 0       ; 0         ; 3    ; 0            ; 0          ; |ip_neopixel        ; ip_neopixel ; work         ;
+; |ip_neopixel               ; 124 (124)           ; 45 (45)                   ; 0           ; 0          ; 0            ; 0       ; 0         ; 7    ; 0            ; 0          ; |ip_neopixel        ; ip_neopixel ; work         ;
 +----------------------------+---------------------+---------------------------+-------------+------------+--------------+---------+-----------+------+--------------+------------+---------------------+-------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
 
 
-+------------------------------------------------------------------------+
-; Registers Removed During Synthesis                                     ;
-+----------------------------------------+-------------------------------+
-; Register name                          ; Reason for Removal            ;
-+----------------------------------------+-------------------------------+
-; current_color[16..20]                  ; Merged with current_color[21] ;
-; current_color[8..12]                   ; Merged with current_color[13] ;
-; current_color[0..5]                    ; Merged with current_color[6]  ;
-; Total Number of Removed Registers = 16 ;                               ;
-+----------------------------------------+-------------------------------+
+Encoding Type:  One-Hot
++--------------------------------------------------------------------------------------------+
+; State Machine - |ip_neopixel|state                                                         ;
++-------------------+----------------+----------------+------------------+-------------------+
+; Name              ; state.NEXT_LED ; state.SEND_BIT ; state.LOAD_COLOR ; state.RESET_STATE ;
++-------------------+----------------+----------------+------------------+-------------------+
+; state.RESET_STATE ; 0              ; 0              ; 0                ; 0                 ;
+; state.LOAD_COLOR  ; 0              ; 0              ; 1                ; 1                 ;
+; state.SEND_BIT    ; 0              ; 1              ; 0                ; 1                 ;
+; state.NEXT_LED    ; 1              ; 0              ; 0                ; 1                 ;
++-------------------+----------------+----------------+------------------+-------------------+
+
+
++------------------------------------------------------------+
+; Logic Cells Representing Combinational Loops               ;
++--------------------------------------------------------+---+
+; Logic Cell Name                                        ;   ;
++--------------------------------------------------------+---+
+; num_leds[3]~0                                          ;   ;
+; Number of logic cells representing combinational loops ; 1 ;
++--------------------------------------------------------+---+
+Note: All cells listed above may not be present at the end of synthesis due to various synthesis optimizations.
+
+
++---------------------------------------------------------------------------------+
+; Registers Removed During Synthesis                                              ;
++----------------------------------------+----------------------------------------+
+; Register name                          ; Reason for Removal                     ;
++----------------------------------------+----------------------------------------+
+; low_time[0]                            ; Stuck at GND due to stuck port data_in ;
+; high_time[2,3,6..31]                   ; Stuck at GND due to stuck port data_in ;
+; low_time[6..31]                        ; Stuck at GND due to stuck port data_in ;
+; high_time[5]                           ; Merged with high_time[0]               ;
+; low_time[1,2,4]                        ; Merged with high_time[0]               ;
+; low_time[3]                            ; Merged with high_time[1]               ;
+; low_time[5]                            ; Merged with high_time[4]               ;
+; couleur_index[20]                      ; Merged with couleur_index[19]          ;
+; couleur_index[18]                      ; Merged with couleur_index[16]          ;
+; couleur_index[6]                       ; Merged with couleur_index[4]           ;
+; couleur_index[5]                       ; Merged with couleur_index[1]           ;
+; couleur_index[2]                       ; Merged with couleur_index[0]           ;
+; couleur_index[8,9,13]                  ; Merged with couleur_index[11]          ;
+; Total Number of Removed Registers = 69 ;                                        ;
++----------------------------------------+----------------------------------------+
 
 
 +------------------------------------------------------+
@@ -235,12 +271,12 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 52    ;
-; Number of registers using Synchronous Clear  ; 37    ;
+; Total registers                              ; 45    ;
+; Number of registers using Synchronous Clear  ; 12    ;
 ; Number of registers using Synchronous Load   ; 0     ;
-; Number of registers using Asynchronous Clear ; 51    ;
+; Number of registers using Asynchronous Clear ; 42    ;
 ; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 17    ;
+; Number of registers using Clock Enable       ; 35    ;
 ; Number of registers using Preset             ; 0     ;
 +----------------------------------------------+-------+
 
@@ -250,23 +286,20 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------------------------------+---------+
 ; Inverted Register                      ; Fan out ;
 +----------------------------------------+---------+
-; current_color[23]                      ; 1       ;
-; current_color[22]                      ; 1       ;
-; current_color[21]                      ; 1       ;
-; Total number of inverted registers = 3 ;         ;
+; OUT_WS~reg0                            ; 3       ;
+; Total number of inverted registers = 1 ;         ;
 +----------------------------------------+---------+
 
 
-+----------------------------------------------------------------------------------------------------------------------------------------------+
-; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                               ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+--------------------------------+
-; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output     ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+--------------------------------+
-; 3:1                ; 5 bits    ; 10 LEs        ; 5 LEs                ; 5 LEs                  ; Yes        ; |ip_neopixel|bit_counter[2]    ;
-; 4:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |ip_neopixel|led_index[3]      ;
-; 27:1               ; 5 bits    ; 90 LEs        ; 65 LEs               ; 25 LEs                 ; Yes        ; |ip_neopixel|current_color[13] ;
-; 27:1               ; 3 bits    ; 54 LEs        ; 42 LEs               ; 12 LEs                 ; Yes        ; |ip_neopixel|current_color[21] ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+--------------------------------+
++------------------------------------------------------------------------------------------------------------------------------------------+
+; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                           ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------+
+; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------+
+; 5:1                ; 12 bits   ; 36 LEs        ; 12 LEs               ; 24 LEs                 ; Yes        ; |ip_neopixel|cnt_ticks[10] ;
+; 3:1                ; 5 bits    ; 10 LEs        ; 10 LEs               ; 0 LEs                  ; No         ; |ip_neopixel|cnt_bits      ;
+; 6:1                ; 2 bits    ; 8 LEs         ; 6 LEs                ; 2 LEs                  ; No         ; |ip_neopixel|Selector13    ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------+
 
 
 +-----------------------------------------------------+
@@ -274,24 +307,24 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +-----------------------+-----------------------------+
 ; Type                  ; Count                       ;
 +-----------------------+-----------------------------+
-; boundary_port         ; 3                           ;
-; cycloneiii_ff         ; 52                          ;
-;     CLR               ; 2                           ;
-;     CLR SCLR          ; 32                          ;
-;     ENA CLR           ; 12                          ;
-;     ENA CLR SCLR      ; 5                           ;
-;     plain             ; 1                           ;
-; cycloneiii_lcell_comb ; 105                         ;
-;     arith             ; 35                          ;
-;         2 data inputs ; 35                          ;
-;     normal            ; 70                          ;
-;         1 data inputs ; 2                           ;
-;         2 data inputs ; 3                           ;
-;         3 data inputs ; 13                          ;
-;         4 data inputs ; 52                          ;
+; boundary_port         ; 7                           ;
+; cycloneiii_ff         ; 45                          ;
+;     CLR               ; 10                          ;
+;     ENA               ; 3                           ;
+;     ENA CLR           ; 20                          ;
+;     ENA CLR SCLR      ; 12                          ;
+; cycloneiii_lcell_comb ; 125                         ;
+;     arith             ; 21                          ;
+;         2 data inputs ; 15                          ;
+;         3 data inputs ; 6                           ;
+;     normal            ; 104                         ;
+;         1 data inputs ; 4                           ;
+;         2 data inputs ; 25                          ;
+;         3 data inputs ; 15                          ;
+;         4 data inputs ; 60                          ;
 ;                       ;                             ;
-; Max LUT depth         ; 6.00                        ;
-; Average LUT depth     ; 3.77                        ;
+; Max LUT depth         ; 7.00                        ;
+; Average LUT depth     ; 3.96                        ;
 +-----------------------+-----------------------------+
 
 
@@ -300,7 +333,7 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:00:01     ;
+; Top            ; 00:00:00     ;
 +----------------+--------------+
 
 
@@ -310,323 +343,34 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-    Info: Processing started: Mon Dec 16 17:56:20 2024
+    Info: Processing started: Fri Jan 03 17:16:32 2025
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off IP_NEOPIXEL -c IP_NEOPIXEL
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 4 of the 4 processors detected
 Info (12021): Found 2 design units, including 1 entities, in source file /users/ayoub/desktop/pj_radar_2d_ladjici_ayoub/partie_6/src/ip_neopixel.vhd
-    Info (12022): Found design unit 1: ip_neopixel-Behavioral File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 13
+    Info (12022): Found design unit 1: ip_neopixel-Behavioral File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 15
     Info (12023): Found entity 1: ip_neopixel File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 5
 Info (12021): Found 1 design units, including 1 entities, in source file de10_lite_golden_top.v
     Info (12023): Found entity 1: DE10_LITE_Golden_Top File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/fit/DE10_LITE_Golden_Top.v Line: 29
 Info (12127): Elaborating entity "ip_neopixel" for the top level hierarchy
-Warning (10492): VHDL Process Statement warning at ip_neopixel.vhd(79): signal "memoire" is read inside the Process Statement but isn't in the Process Statement's sensitivity list File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 79
-Warning (10631): VHDL Process Statement warning at ip_neopixel.vhd(70): inferring latch(es) for signal or variable "memoire", which holds its previous value in one or more paths through the process File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][0]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][1]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][2]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][3]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][4]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][5]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][6]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][7]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][8]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][9]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][10]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][11]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][12]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][13]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][14]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][15]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][16]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][17]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][18]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][19]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][20]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][21]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][22]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[11][23]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][0]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][1]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][2]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][3]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][4]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][5]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][6]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][7]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][8]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][9]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][10]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][11]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][12]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][13]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][14]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][15]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][16]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][17]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][18]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][19]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][20]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][21]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][22]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[10][23]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][0]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][1]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][2]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][3]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][4]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][5]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][6]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][7]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][8]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][9]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][10]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][11]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][12]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][13]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][14]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][15]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][16]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][17]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][18]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][19]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][20]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][21]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][22]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[9][23]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][0]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][1]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][2]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][3]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][4]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][5]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][6]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][7]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][8]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][9]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][10]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][11]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][12]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][13]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][14]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][15]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][16]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][17]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][18]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][19]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][20]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][21]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][22]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[8][23]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][0]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][1]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][2]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][3]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][4]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][5]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][6]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][7]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][8]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][9]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][10]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][11]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][12]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][13]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][14]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][15]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][16]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][17]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][18]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][19]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][20]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][21]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][22]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[7][23]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][0]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][1]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][2]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][3]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][4]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][5]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][6]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][7]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][8]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][9]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][10]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][11]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][12]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][13]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][14]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][15]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][16]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][17]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][18]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][19]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][20]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][21]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][22]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[6][23]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][0]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][1]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][2]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][3]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][4]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][5]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][6]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][7]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][8]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][9]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][10]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][11]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][12]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][13]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][14]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][15]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][16]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][17]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][18]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][19]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][20]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][21]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][22]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[5][23]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][0]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][1]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][2]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][3]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][4]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][5]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][6]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][7]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][8]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][9]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][10]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][11]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][12]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][13]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][14]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][15]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][16]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][17]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][18]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][19]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][20]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][21]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][22]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[4][23]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][0]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][1]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][2]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][3]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][4]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][5]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][6]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][7]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][8]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][9]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][10]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][11]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][12]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][13]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][14]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][15]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][16]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][17]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][18]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][19]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][20]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][21]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][22]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[3][23]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][0]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][1]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][2]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][3]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][4]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][5]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][6]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][7]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][8]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][9]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][10]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][11]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][12]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][13]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][14]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][15]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][16]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][17]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][18]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][19]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][20]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][21]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][22]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[2][23]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][0]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][1]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][2]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][3]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][4]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][5]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][6]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][7]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][8]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][9]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][10]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][11]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][12]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][13]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][14]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][15]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][16]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][17]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][18]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][19]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][20]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][21]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][22]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[1][23]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][0]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][1]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][2]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][3]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][4]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][5]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][6]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][7]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][8]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][9]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][10]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][11]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][12]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][13]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][14]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][15]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][16]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][17]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][18]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][19]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][20]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][21]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][22]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (10041): Inferred latch for "memoire[0][23]" at ip_neopixel.vhd(70) File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 70
-Info (13000): Registers with preset signals will power-up high File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 72
+Warning (10492): VHDL Process Statement warning at ip_neopixel.vhd(67): signal "num_leds" is read inside the Process Statement but isn't in the Process Statement's sensitivity list File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 67
+Warning (113028): 4 out of 16 addresses are uninitialized. The Quartus Prime software will initialize them to "0". There are 1 warnings found, and 1 warnings are reported. File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/fit/db/IP_NEOPIXEL.ram0_ip_neopixel_d1879ed3.hdl.mif Line: 1
+    Warning (113027): Addresses ranging from 12 to 15 are not initialized File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/fit/db/IP_NEOPIXEL.ram0_ip_neopixel_d1879ed3.hdl.mif Line: 1
+Info (276014): Found 1 instances of uninferred RAM logic
+    Info (276013): RAM logic "memoire" is uninferred because MIF is not supported for the selected family File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 41
+Info (13000): Registers with preset signals will power-up high File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 11
 Info (13003): DEV_CLRn pin will set, and not reset, register with preset signal due to NOT Gate Push-Back
 Info (286030): Timing-Driven Synthesis is running
-Critical Warning (18061): Ignored Power-Up Level option on the following registers
-    Critical Warning (18010): Register current_color[22] will power up to High File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 72
-    Critical Warning (18010): Register current_color[23] will power up to High File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 72
-    Critical Warning (18010): Register current_color[21] will power up to High File: C:/Users/ayoub/Desktop/Pj_Radar_2D_LADJICI_Ayoub/Partie_6/src/ip_neopixel.vhd Line: 72
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
-Info (21057): Implemented 108 device resources after synthesis - the final resource count might be different
-    Info (21058): Implemented 2 input pins
+Info (21057): Implemented 134 device resources after synthesis - the final resource count might be different
+    Info (21058): Implemented 6 input pins
     Info (21059): Implemented 1 output pins
-    Info (21061): Implemented 105 logic cells
-Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 7 warnings
-    Info: Peak virtual memory: 4792 megabytes
-    Info: Processing ended: Mon Dec 16 17:56:34 2024
-    Info: Elapsed time: 00:00:14
+    Info (21061): Implemented 127 logic cells
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 4 warnings
+    Info: Peak virtual memory: 4791 megabytes
+    Info: Processing ended: Fri Jan 03 17:16:47 2025
+    Info: Elapsed time: 00:00:15
     Info: Total CPU time (on all processors): 00:00:14
 
 
